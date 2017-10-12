@@ -75,10 +75,6 @@
 			{
 				switch($value)
 				{
-					case $value === "":
-						$data[$key] = "";
-						break;
-
 					case $value === "None":
 						$data[$key] = null;
 						break;
@@ -92,7 +88,7 @@
 						break;
 
 					case $value === null:
-						$data[$key] = "";
+						$data[$key] = "null";
 						break;
 				}
 			}
