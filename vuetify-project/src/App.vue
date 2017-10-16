@@ -61,12 +61,7 @@
           { title: 'Leaderboard', icon: 'rowing', location: '/leaderboard' }
         ],
         mini: false,
-        right: null,
-        rules: {
-          required: (v) => !!v || 'this field is required',
-          zip: (v) => /^\d{5}$/.test(v) || 'zipcode is invalid',
-          phone: (v) => /^\d{10}$/.test(v.replace(/\D/g, '')) || 'phone number is invalid'
-        }
+        right: null
       }
     }
   }

@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "content-hash": "e810f8ed56874f0180d383ca85a43e51",
+    "content-hash": "ddee4fefaf403148b767e660c05b5d7b",
     "packages": [
         {
             "name": "barryvdh/laravel-cors",
@@ -1754,6 +1754,47 @@
             "time": "2017-06-05T06:31:10+00:00"
         },
         {
+            "name": "pmeth/php_repl",
+            "version": "dev-master",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/pmeth/php_repl.git",
+                "reference": "2785ddbe65a854e419cec2d15a27bfe426f6b65e"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/pmeth/php_repl/zipball/2785ddbe65a854e419cec2d15a27bfe426f6b65e",
+                "reference": "2785ddbe65a854e419cec2d15a27bfe426f6b65e",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.3.0"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-0": {
+                    "PHPRepl": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "BSD-2-Clause"
+            ],
+            "authors": [
+                {
+                    "name": "Ian Eure",
+                    "email": "ieure@php.net",
+                    "role": "Lead"
+                },
+                {
+                    "name": "Peter Meth",
+                    "homepage": "http://softersoftware.com"
+                }
+            ],
+            "description": "A command line REPL (Read-Evaluate-Print-Loop) for PHP written in PHP.",
+            "time": "2014-02-14T14:04:59+00:00"
+        },
+        {
             "name": "psr/container",
             "version": "1.0.0",
             "source": {
@@ -3109,16 +3150,16 @@
         },
         {
             "name": "zendframework/zend-diactoros",
-            "version": "1.6.0",
+            "version": "1.6.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/zendframework/zend-diactoros.git",
-                "reference": "2faa791b66bac33ca40031d8bce03b7dc8143490"
+                "reference": "c8664b92a6d5bc229e48b0923486c097e45a7877"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/zendframework/zend-diactoros/zipball/2faa791b66bac33ca40031d8bce03b7dc8143490",
-                "reference": "2faa791b66bac33ca40031d8bce03b7dc8143490",
+                "url": "https://api.github.com/repos/zendframework/zend-diactoros/zipball/c8664b92a6d5bc229e48b0923486c097e45a7877",
+                "reference": "c8664b92a6d5bc229e48b0923486c097e45a7877",
                 "shasum": ""
             },
             "require": {
@@ -3157,7 +3198,7 @@
                 "psr",
                 "psr-7"
             ],
-            "time": "2017-09-13T14:47:08+00:00"
+            "time": "2017-10-12T15:24:51+00:00"
         }
     ],
     "packages-dev": [
@@ -4834,7 +4875,9 @@
     ],
     "aliases": [],
     "minimum-stability": "stable",
-    "stability-flags": [],
+    "stability-flags": {
+        "pmeth/php_repl": 20
+    },
     "prefer-stable": false,
     "prefer-lowest": false,
     "platform": {
