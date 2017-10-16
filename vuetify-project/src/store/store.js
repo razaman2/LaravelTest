@@ -4,6 +4,10 @@ import axios from 'axios';
 import swal from 'sweetalert2';
 import 'sweetalert2/dist/sweetalert2.min.css';
 import global from './global';
+import techStatus from './techStatus';
+import alarmCom from './alarmCom';
+import customerInfo from './customerInfo';
+import installInfo from './installInfo';
 
 let http = axios.create({baseURL: 'http://localhost:8000/api'});
 
@@ -12,77 +16,13 @@ Vue.use(Vuex);
 export const store = new Vuex.Store({
   strict: true,
   modules: {
-    global: global
-  },
-  state: {
-    alarmComServices: {
-      'ADC Serial Number': null,
-      'ADC Customer Id': null,
-      username: null,
-      password: null
-    },
-    techStatus: {
-      notOnSite: true,
-      'Tech In Route': null,
-      'Tech Arrival': null,
-      'Tech Complete': null
-    },
-    customerInfo: {
-      'First Name': null,
-      'Last Name': null,
-      'Contact Phone': null,
-      Address: null,
-      'Address 2': null,
-      City: null,
-      State: null,
-      Province: null,
-      Zip: null,
-      Postal: null,
-      County: null,
-      Country: null
-    },
-    installInfo: {
-      'Monitoring Level': null,
-      'Package Type': null,
-      'Monitoring Center': null,
-      'Panel Type': null,
-      Codeword: null,
-      'Panel Phone': null,
-      'Panel Location': null,
-      'Transformer Location': null,
-      'Cross Street': null,
-      'Two Way Voice': null,
-      'ADC Video': null,
-      'Skybell Only': null,
-    }
-  },
-  getters: {
-    alarmComServices: state => {
-      return state.alarmComServices;
-    },
-    techStatus: state => {
-      return state.techStatus;
-    },
-    customerInfo: state => {
-      return state.customerInfo;
-    },
-    installInfo: state => {
-      return state.installInfo;
-    },
-    dealPicklists: state => {
-      let fields = {};
-      for(let field in state.global.dealFields) {
-        if(state.global.dealFields[field].type === 'Pick List') {
-          fields[state.global.dealFields[field].label] = state.global.dealFields[field].options;
-        }
-      }
-      return fields;
-    }
+    global: global,
+    techStatus: techStatus,
+    alarmComServices: alarmCom,
+    customerInfo: customerInfo,
+    installInfo: installInfo
   },
   mutations: {
-    customerInfo: (state, payload) => {
-      state.customerInfo = payload;
-    },
     deal: (state, payload) => {
       for(let key in state.customerInfo) {
         if(key in payload) {
@@ -107,9 +47,6 @@ export const store = new Vuex.Store({
           state.alarmComServices[key] = payload[key];
         }
       }
-    },
-    updateADC: (state, payload) => {
-      state.alarmComServices['ADC Serial Number'] = payload;
     }
   },
   actions: {
@@ -119,7 +56,8 @@ export const store = new Vuex.Store({
           title: 'Fetching Deal',
           text: 'Please wait while we fetch record from crm...',
           type: 'info',
-          useRejections: false,
+          allowOutsideClick: false,
+          allowEscapeKey: false,
           onOpen: function () {
             swal.showLoading();
           }
@@ -153,8 +91,7 @@ export const store = new Vuex.Store({
             title: 'Deal Updated',
             text: 'Record was successfully updated...',
             type: 'success',
-            allowOutsideClick: false,
-            allowEscapeKey: false,
+            useRejections: false,
             timer: 2000
           });
           context.dispatch('fetchDeal', {companyId: context.getters.global.companyId, id: context.getters.global.dealId, update: true});
@@ -163,8 +100,15 @@ export const store = new Vuex.Store({
         console.log(error);
       });
     },
-    updateADC: (context, payload) => {
-      context.commit('updateADC', payload);
+    dealFields: (context, payload) => {
+      http.post('/deal/getfields', payload).then(response => {
+        console.log('Deal Fields', response);
+        if(response.data.length > 0) {
+          context.commit('dealFields', response.data);
+        }
+      }).catch(error => {
+        console.log(error);
+      });
     }
   }
 });

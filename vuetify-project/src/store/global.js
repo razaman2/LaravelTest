@@ -1,7 +1,3 @@
-import axios from 'axios';
-
-let http = axios.create({baseURL: 'http://localhost:8000/api'});
-
 export default global = {
   state: {
     dealFields: null,
@@ -43,9 +39,8 @@ export default global = {
         }
       },
       validate: (form) => {
-        let data = {};
         if(form.$refs.form.validate()) {
-          this.formStatus = true;
+          let data = {};
           let inputs = form.$refs.form.inputs;
           for(let input in inputs) {
             data[inputs[input].$attrs.name] = inputs[input].inputValue;
@@ -60,6 +55,15 @@ export default global = {
   getters: {
     global: state => {
       return state;
+    },
+    dealPicklists: state => {
+      let fields = {};
+      for(let field in state.dealFields) {
+        if(state.dealFields[field].type === 'Pick List') {
+          fields[state.dealFields[field].label] = state.dealFields[field].options;
+        }
+      }
+      return fields;
     }
   },
   mutations: {
@@ -74,16 +78,6 @@ export default global = {
     }
   },
   actions: {
-    dealFields: (context, payload) => {
-      http.post('/deal/getfields', payload).then(response => {
-        console.log('Deal Fields', response);
-        if(response.data.length > 0) {
-          context.commit('dealFields', response.data);
-        }
-      }).catch(error => {
-        console.log(error);
-      });
-    },
     updateDealId: (context, payload) => {
       context.commit('updateDealId', payload);
     },
