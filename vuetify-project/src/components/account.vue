@@ -3,6 +3,7 @@
     <CustomerInformation></CustomerInformation>
     <InstallInformation></InstallInformation>
     <TechStatus></TechStatus>
+    <AlarmComServices></AlarmComServices>
   </v-container>
 </template>
 
@@ -10,12 +11,23 @@
   import CustomerInformation from './modules/CustomerInformation.vue';
   import InstallInformation from './modules/InstallInformation.vue';
   import TechStatus from './modules/TechStatus.vue';
+  import AlarmComServices from './modules/AlarmComServices.vue';
 
   export default {
     components: {
       CustomerInformation: CustomerInformation,
       InstallInformation: InstallInformation,
-      TechStatus: TechStatus
+      TechStatus: TechStatus,
+      AlarmComServices: AlarmComServices
+    },
+    created: function () {
+      let companyId = this.$store.getters.global.companyId;
+      this.$store.dispatch('dealFields', {companyId: companyId});
+      let id = this.$route.params.id;
+      if(id) {
+        this.$store.dispatch('updateDealId', id);
+        this.$store.dispatch('fetchDeal', {companyId: companyId, id: this.$store.getters.global.dealId});
+      }
     }
   }
 </script>

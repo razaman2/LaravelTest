@@ -3,16 +3,10 @@ import Vuetify from 'vuetify';
 import './stylus/main.styl';
 import App from './App.vue';
 import router from './router';
-import {store} from './store/store';
-import axios from 'axios';
 import moment from 'moment';
+import { store } from './store/store';
 
 Vue.prototype.$moment = moment;
-
-Vue.prototype.$http = axios.create({
-  baseURL: 'http://localhost:8000/api'
-});
-
 Vue.use(Vuetify);
 Vue.config.productionTip = false;
 

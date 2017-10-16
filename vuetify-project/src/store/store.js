@@ -1,45 +1,25 @@
 import Vue from 'vue';
 import Vuex from 'vuex';
+import axios from 'axios';
+import swal from 'sweetalert2';
+import 'sweetalert2/dist/sweetalert2.min.css';
+import global from './global';
+
+let http = axios.create({baseURL: 'http://localhost:8000/api'});
+
 Vue.use(Vuex);
 
 export const store = new Vuex.Store({
   strict: true,
+  modules: {
+    global: global
+  },
   state: {
-    global: {
-      dealFields: null,
-      rules: {
-        required: (v) => !!v || 'this field is required',
-        zip: (v) => {
-          if (v && v.length > 0){
-            return /^\d{5}$/.test(v) || 'zipcode is invalid';
-          }
-          return true;
-        },
-        phone: (v) => {
-          if(v && v.length > 0){
-            return /^\d{10}$/.test(v.replace(/\D/g, '')) || 'phone number is invalid';
-          }
-          return true;
-        },
-        passcode: (v) => {
-          if(v && v.length > 0){
-            return /^\d{5,10}$/.test(v) || 'passcode is invalid';
-          }
-          return true;
-        },
-        validate: function (form) {
-          let data = [];
-          if(form.$refs.form.validate()) {
-            this.formStatus = true;
-            let inputs = form.$refs.form.inputs;
-            for(let input in inputs) {
-              let label = inputs[input].label ? inputs[input].label:input;
-              data[label] = inputs[input].inputValue;
-            }
-            console.log('Form Validation', form.$refs.form, data);
-          }
-        }
-      }
+    alarmComServices: {
+      'ADC Serial Number': null,
+      'ADC Customer Id': null,
+      username: null,
+      password: null
     },
     techStatus: {
       notOnSite: true,
@@ -48,37 +28,37 @@ export const store = new Vuex.Store({
       'Tech Complete': null
     },
     customerInfo: {
-      'First Name': '',
-      'Last Name': '',
-      'Contact Phone': '',
-      Address: '',
-      'Address 2': '',
-      City: '',
-      State: '',
-      Province: '',
-      Zip: '',
-      Postal: '',
-      County: '',
-      Country: ''
+      'First Name': null,
+      'Last Name': null,
+      'Contact Phone': null,
+      Address: null,
+      'Address 2': null,
+      City: null,
+      State: null,
+      Province: null,
+      Zip: null,
+      Postal: null,
+      County: null,
+      Country: null
     },
     installInfo: {
-      'Monitoring Level': '',
-      'Package Type': '',
-      'Monitoring Center': '',
-      'Panel Type': '',
-      Codeword: '',
-      'Panel Phone': '',
-      'Panel Location': '',
-      'Transformer Location': '',
-      'Cross Street': '',
-      'Two Way Voice': '',
-      'ADC Video': '',
-      'Skybell Only': '',
+      'Monitoring Level': null,
+      'Package Type': null,
+      'Monitoring Center': null,
+      'Panel Type': null,
+      Codeword: null,
+      'Panel Phone': null,
+      'Panel Location': null,
+      'Transformer Location': null,
+      'Cross Street': null,
+      'Two Way Voice': null,
+      'ADC Video': null,
+      'Skybell Only': null,
     }
   },
   getters: {
-    global: state => {
-      return state.global;
+    alarmComServices: state => {
+      return state.alarmComServices;
     },
     techStatus: state => {
       return state.techStatus;
@@ -122,42 +102,69 @@ export const store = new Vuex.Store({
           state.techStatus[key] = payload[key];
         }
       }
+      for(let key in state.alarmComServices) {
+        if(key in payload) {
+          state.alarmComServices[key] = payload[key];
+        }
+      }
     },
-    dealFields: (state, payload) => {
-      state.global.dealFields = payload;
+    updateADC: (state, payload) => {
+      state.alarmComServices['ADC Serial Number'] = payload;
     }
   },
   actions: {
     fetchDeal: (context, payload) => {
-      payload.$http.post('/deal/get', payload.$route.params).then(response => {
+      if(!payload.update) {
+        swal({
+          title: 'Fetching Deal',
+          text: 'Please wait while we fetch record from crm...',
+          type: 'info',
+          useRejections: false,
+          onOpen: function () {
+            swal.showLoading();
+          }
+        });
+      }
+      http.post('/deal/get', payload).then(response => {
         console.log('Fetch Deal', response);
-        if(response.data.Id.match(payload.$route.params.id)) {
+        if(response.data.Id === payload.id) {
           context.commit('deal', response.data);
         }
+        swal.close();
       }).catch(error => {
         console.log(error);
       });
     },
     updateDeal: (context, payload) => {
-      payload.value.Id = payload.obj.$route.params.id;
-      payload.obj.$http.post('/deal/update', {deal: payload.value}).then(response => {
+      swal({
+        title: 'Updating Deal',
+        text: 'Please wait while we update record in crm...',
+        type: 'info',
+        allowOutsideClick: false,
+        allowEscapeKey: false,
+        onOpen: function () {
+          swal.showLoading();
+        }
+      });
+      http.post('/deal/update', payload).then(response => {
         console.log('Update Deal', response);
         if(response.data[1].code.match('2001')) {
-          context.dispatch('fetchDeal', payload.obj);
+          swal({
+            title: 'Deal Updated',
+            text: 'Record was successfully updated...',
+            type: 'success',
+            allowOutsideClick: false,
+            allowEscapeKey: false,
+            timer: 2000
+          });
+          context.dispatch('fetchDeal', {companyId: context.getters.global.companyId, id: context.getters.global.dealId, update: true});
         }
       }).catch(error => {
         console.log(error);
       });
     },
-    dealFields: (context, payload) => {
-      payload.$http.post('/deal/getfields').then(response => {
-        console.log('Deal Fields', response);
-        if(response.data.length > 0) {
-          context.commit('dealFields', response.data);
-        }
-      }).catch(error => {
-        console.log(error);
-      });
+    updateADC: (context, payload) => {
+      context.commit('updateADC', payload);
     }
   }
 });
