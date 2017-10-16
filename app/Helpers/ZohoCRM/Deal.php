@@ -14,17 +14,17 @@
 				->withEmptyFields()
 				->request()[1]->getData();
 
-			$this->setFirstLastName($this->module);
-
 			$this->changeArrayKey(["POTENTIALID" => "Id"], $this->module);
 
-			$this->module = $this->convertFromString($this->module);
+			$this->module = $this->convertFromZohoString($this->module);
 
-			$this->module = $this->convertCurrency($this->module);
+			$this->setFirstLastNameFromZoho($this->module);
+
+			$this->module = $this->convertToCurrencyFromZoho($this->module);
 
 			$this->module["Country"] = $this->convertCountryFromZoho($this->module["Country"]);
 
-			$this->module = $this->countryIsCanadaFromCrm($this->module);
+			$this->module = $this->countryIsCanadaFromZoho($this->module);
 
 			return $this->module;
 		}
@@ -34,7 +34,7 @@
 			$data["Country"] = $this->convertCountryToZoho($data["Country"]);
 
 			$this->module = $this->zohoApi->insertRecords()
-				->setRecords([$this->convertToString($data)])
+				->setRecords([$this->convertToZohoString($data)])
 				->triggerWorkflow()
 				->onDuplicateError()
 				->request();
@@ -57,7 +57,7 @@
 				$data["Country"] = $this->convertCountryToZoho($data["Country"]);
 
 			$this->module = $this->zohoApi->updateRecords()
-				->addRecord($this->convertToString($data))
+				->addRecord($this->convertToZohoString($data))
 				->triggerWorkflow()
 				->request();
 			

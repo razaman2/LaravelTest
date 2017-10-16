@@ -14,7 +14,7 @@
 
 			$this->changeArrayKey(["SERVICEID" => "Id"], $this->module);
 
-			$this->module = $this->convertFromString($this->module);
+			$this->module = $this->convertFromZohoString($this->module);
 
 			return $this->module;
 		}
@@ -22,7 +22,7 @@
 		public function updateService($data)
 		{
 			$this->module = $this->zohoApi->updateRecords()
-				->addRecord($this->convertToString($data))
+				->addRecord($this->convertToZohoString($data))
 				->triggerWorkflow()
 				->request();
 

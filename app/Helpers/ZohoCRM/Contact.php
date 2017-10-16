@@ -16,7 +16,7 @@
 
 			$this->changeArrayKey(["CONTACTID" => "Id"], $this->module);
 
-			$this->module = $this->convertFromString($this->module);
+			$this->module = $this->convertFromZohoString($this->module);
 
 			$this->module["Mailing Country"] = $this->convertCountryFromZoho($this->module["Mailing Country"]);
 
@@ -28,7 +28,7 @@
 			$data["Mailing Country"] = $this->convertCountryToZoho($data["Mailing Country"]);
 
 			$this->module = $this->zohoApi->insertRecords()
-				->setRecords([$this->convertToString($data)])
+				->setRecords([$this->convertToZohoString($data)])
 				->triggerWorkflow()
 				->onDuplicateError()
 				->request();
@@ -42,7 +42,7 @@
 				$data["Mailing Country"] = $this->convertCountryToZoho($data["Mailing Country"]);
 
 			$this->module = $this->zohoApi->updateRecords()
-				->addRecord($this->convertToString($data))
+				->addRecord($this->convertToZohoString($data))
 				->triggerWorkflow()
 				->request();
 
@@ -60,7 +60,7 @@
 
 				$this->changeArrayKey(["CONTACTID" => "Id"], $this->module);
 
-				$this->module = $this->convertFromString($this->module);
+				$this->module = $this->convertFromZohoString($this->module);
 
 				$this->module["Mailing Country"] = $this->convertCountryFromZoho($this->module["Mailing Country"]);
 

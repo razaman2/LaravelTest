@@ -4,24 +4,32 @@
 
 	trait setFirstLastName
 	{
-		private function setFirstLastName(&$collection)
+		private function setFirstLastNameFromZoho(&$collection)
 		{
-			$contactName = $collection["Contact Name"];
-
-			$contactName = explode(" ", $contactName);
-
-			if(count($contactName) > 2)
+			if($collection["Contact Name"])
 			{
-				$firstName = $contactName[1];
-				$lastName  = $contactName[2];
-			}
-			else
-			{
-				$firstName = $contactName[0];
-				$lastName  = $contactName[1];
-			}
+				$contactName = $collection["Contact Name"];
 
-			$collection["First Name"] = $firstName;
-			$collection["Last Name"] = $lastName;
+				$contactName = explode(" ", $contactName);
+
+				if(count($contactName) > 2)
+				{
+					$firstName = $contactName[1];
+					$lastName  = $contactName[2];
+				}
+				else
+				{
+					$firstName = $contactName[0];
+					$lastName  = $contactName[1];
+				}
+
+				$collection["First Name"] = $firstName;
+				$collection["Last Name"] = $lastName;
+			}
+		}
+
+		private function setFirstLastNameToZoho(&$collection)
+		{
+
 		}
 	}

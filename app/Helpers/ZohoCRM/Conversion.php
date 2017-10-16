@@ -4,7 +4,7 @@
 
 	trait Conversion
 	{
-		public function countryIsCanadaFromCrm($data)
+		public function countryIsCanadaFromZoho($data)
 		{
 			$keys = ["Country", "Mailing Country"];
 
@@ -36,12 +36,12 @@
 			return $data;
 		}
 
-		public function countryIsCanadaToCrm()
+		public function countryIsCanadaToZoho()
 		{
 
 		}
 
-		protected function convertFromString($data)
+		protected function convertFromZohoString($data)
 		{
 			foreach($data as $key => $value)
 			{
@@ -69,7 +69,7 @@
 			return $data;
 		}
 
-		protected function convertToString($data)
+		protected function convertToZohoString($data)
 		{
 			foreach($data as $key => $value)
 			{
@@ -115,7 +115,7 @@
 			return $fields;
 		}
 
-		protected function convertCurrency($data)
+		protected function convertToCurrencyFromZoho($data)
 		{
 			$fields = ["RMR", "Amount", "Activation Fee"];
 
