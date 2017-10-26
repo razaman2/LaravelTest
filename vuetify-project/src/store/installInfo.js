@@ -18,9 +18,4 @@ export default global = {
       return state;
     }
   },
-  mutations: {
-    installInfo: state => {
-      return state.installInfo;
-    },
-  }
 };

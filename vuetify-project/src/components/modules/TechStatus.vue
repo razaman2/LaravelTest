@@ -56,7 +56,7 @@
           return this.techStatus['Tech In Route'];
         },
         set: function (value) {
-          this.$store.dispatch('updateDeal', {deal: {'Tech In Route': value ? this.time() : null, Id: this.global.dealId}});
+          this.$store.dispatch('updateDeal', {deal: {'Tech In Route': value ? this.time() : null}});
         }
       },
       onsite: {
@@ -64,7 +64,7 @@
           return this.techStatus['Tech Arrival'];
         },
         set: function (value) {
-          this.$store.dispatch('updateDeal', {deal: {'Tech Arrival': value ? this.time() : null, Id: this.global.dealId}});
+          this.$store.dispatch('updateDeal', {deal: {'Tech Arrival': value ? this.time() : null}});
         }
       },
       completed: {
@@ -72,7 +72,7 @@
           return this.techStatus['Tech Complete'];
         },
         set: function (value) {
-          this.$store.dispatch('updateDeal', {deal: {'Tech Complete': value ? this.time() : null, Id: this.global.dealId}});
+          this.$store.dispatch('updateDeal', {deal: {'Tech Complete': value ? this.time() : null}});
         }
       }
     }

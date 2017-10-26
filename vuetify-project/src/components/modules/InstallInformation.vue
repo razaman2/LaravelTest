@@ -106,8 +106,6 @@
       save: function () {
         let data = this.global.rules.validate(this);
         if(data) {
-          data.Id = this.global.dealId;
-          data.companyId = this.global.companyId;
           this.$store.dispatch('updateDeal', {deal: data});
         }
       }

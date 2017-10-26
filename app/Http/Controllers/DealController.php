@@ -8,38 +8,33 @@ use Illuminate\Http\Request;
 
 class DealController extends Controller
 {
-	private $request;
-
-	public function __construct(Request $request)
+	public function create(Request $request)
 	{
-		$this->request = $request;
+		return (new Deal($request->companyId))->createDeal($request->deal);
 	}
 
-	public function create()
+	public function get(Request $request)
 	{
-		return (new Deal($this->request->companyId))->createDeal($this->request->deal);
+		return (new Deal($request->companyId))->getDeal($request->Id);
 	}
 
-	public function get()
+	public function update(Request $request)
 	{
-		return (new Deal($this->request->companyId))->getDeal($this->request->id);
+	    $deal = $request->deal;
+	    $deal['Id'] = $request->Id;
+		return (new Deal($request->companyId))->updateDeal($deal);
 	}
 
-	public function update()
+	public function getFields(Request $request)
 	{
-		return (new Deal($this->request->companyId))->updateDeal($this->request->deal);
+		return (new Deal($request->companyId))->getFields();
 	}
 
-	public function getFields()
+	public function getDealWithContact(Request $request)
 	{
-		return (new Deal($this->request->companyId))->getFields();
-	}
+		$deal = (new Deal($request->companyId))->getDeal($request->Id);
 
-	public function getDealWithContact()
-	{
-		$deal = (new Deal($this->request->companyId))->getDeal($this->request->id);
-
-		$contact = (new Contact($this->request->companyId))->getContact($deal["CONTACTID"]);
+		$contact = (new Contact($request->companyId))->getContact($deal["CONTACTID"]);
 
 		return ["deal" => $deal, "contact" => $contact];
 	}

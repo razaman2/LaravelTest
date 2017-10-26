@@ -28,3 +28,12 @@
 	Route::post('/deal/create', 'DealController@create');
 	Route::post('/deal/update', 'DealController@update');
 
+	Route::post('/receiver/get', 'ReceiverController@get');
+
+	Route::post('/recent/jobs/get', 'RecentJobsController@index');
+	Route::post('/recent/jobs/update', 'RecentJobsController@store');
+	Route::post('/recent/jobs/archive', 'RecentJobsController@archiveJob');
+	Route::post('/recent/jobs/get/archived', 'RecentJobsController@getArchivedJobs');
+	Route::post('/recent/jobs/restore/archived', 'RecentJobsController@restoreArchivedJob');
+	Route::post('/recent/jobs/delete/archived', 'RecentJobsController@deleteArchivedJob');
+

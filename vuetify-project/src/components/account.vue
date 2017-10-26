@@ -22,11 +22,11 @@
     },
     created: function () {
       let companyId = this.$store.getters.global.companyId;
-      this.$store.dispatch('dealFields', {companyId: companyId});
+      this.$store.dispatch('dealFields');
       let id = this.$route.params.id;
       if(id) {
         this.$store.dispatch('updateDealId', id);
-        this.$store.dispatch('fetchDeal', {companyId: companyId, id: this.$store.getters.global.dealId});
+        this.$store.dispatch('fetchDeal');
       }
     }
   }
