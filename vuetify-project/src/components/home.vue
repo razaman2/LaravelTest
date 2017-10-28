@@ -2,10 +2,10 @@
     <v-container grid-list-md>
         <v-layout class="justify-space-between">
             <v-subheader v-if="jobs.data.length > 0">Displaying {{ jobs.from }} to {{ jobs.to }} of {{ jobs.total }} jobs.</v-subheader>
-            <div v-if="showTrashed === 'delete'" @click="getJobs('/recent/recentJobs/get/archived')">
+            <div v-if="showTrashed === 'delete'" @click="getJobs('/recent/recentJobs/get/archived')" style="cursor: pointer">
                 <v-icon class="orange--text icon--x-large">{{ showTrashed }}</v-icon>
             </div>
-            <div v-else @click="getJobs(null)">
+            <div v-else @click="getJobs(null)" style="cursor: pointer">
                 <v-icon class="green--text icon--x-large">{{ showTrashed }}</v-icon>
             </div>
         </v-layout>

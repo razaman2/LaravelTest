@@ -1,6 +1,6 @@
 <template>
  <module>
-    <v-icon slot="module-icon">network_cell</v-icon>
+    <v-icon slot="module-icon">settings_cell</v-icon>
 
     <v-toolbar-title slot="module-title">Alarm Com Services</v-toolbar-title>
 

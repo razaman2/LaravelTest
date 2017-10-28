@@ -9,6 +9,7 @@ import alarmCom from './alarmCom';
 import customerInfo from './customerInfo';
 import installInfo from './installInfo';
 import recentJobs from './recentJobs';
+import zones from './zones';
 
 const http = axios.create({baseURL: 'http://192.168.81.102:8000/api'});
 
@@ -55,7 +56,8 @@ export const store = new Vuex.Store({
         alarmComServices: alarmCom,
         customerInfo: customerInfo,
         installInfo: installInfo,
-        recentJobs: recentJobs
+        recentJobs: recentJobs,
+        zones: zones
     },
     mutations: {
         deal: (state, payload) => {
@@ -162,13 +164,9 @@ export const store = new Vuex.Store({
             http.post((payload) ? payload : '/recent/recentJobs/get', {}).then(response => {
                 console.log('Get Recent Jobs', response);
                 if(response.data.total >= 0) {
-                    if(response.data.path.match(/get\/archived/) && response.data.total > 0) {
+                    if(response.data.path.match(/get$/) || (response.data.path.match(/get\/archived/) && response.data.total !== 0)) {
                         context.commit('getRecentJobs', response.data);
-                        context.commit('showTrashed', 'arrow_back');
-                    } else if(response.data.path.match(/get\/archived/) && response.data.total === 0) {
-                    } else {
-                        context.commit('getRecentJobs', response.data);
-                        context.commit('showTrashed', 'delete');
+                        context.commit('showTrashed', response.data.path.match(/get\/archived/) ? 'arrow_back' : 'delete');
                     }
                 }
             }).then(() => {
