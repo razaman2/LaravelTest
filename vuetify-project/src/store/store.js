@@ -10,9 +10,9 @@ import customerInfo from './customerInfo';
 import installInfo from './installInfo';
 import recentJobs from './recentJobs';
 
-let http = axios.create({baseURL: 'http://192.168.81.102:8000/api'});
+const http = axios.create({baseURL: 'http://192.168.81.102:8000/api'});
 
-http.interceptors.response.use(function (response) {
+http.interceptors.response.use(response => {
     if(response.data.error) {
         swal({
             title: 'There was an error with the request.',
@@ -23,28 +23,29 @@ http.interceptors.response.use(function (response) {
         return Promise.reject(response.data.error);
     }
     return response;
-}, function (error) {
+}, error => {
     return Promise.reject(error);
 });
 
-http.interceptors.request.use(function (config) {
+http.interceptors.request.use(config => {
     config.data.companyId = store.getters.global.companyId;
     config.data.userId = store.getters.global.userId;
     config.data.Id = store.getters.global.dealId;
+    config.data.clientTime = new Date().toLocaleString();
     return config;
-}, function (error) {
+}, error => {
     return Promise.reject(error);
 });
 
-Vue.use(Vuex);
-
 function refreshPage(context) {
-    return context.getters.jobs.from === context.getters.jobs.to ?
-        context.getters.jobs.previous_page_url !== null ?
-            context.getters.jobs.previous_page_url :
-            context.getters.jobs.path :
-        context.getters.jobs.path + '?page=' + context.getters.jobs.current_page
+    if(context.state.recentJobs.jobs.from === context.state.recentJobs.jobs.to) {
+        return context.state.recentJobs.jobs.prev_page_url;
+    } else {
+        return context.state.recentJobs.jobs.path + '?page=' + context.state.recentJobs.jobs.current_page;
+    }
 }
+
+Vue.use(Vuex);
 
 export const store = new Vuex.Store({
     strict: true,
@@ -158,10 +159,17 @@ export const store = new Vuex.Store({
                     swal.showLoading();
                 }
             });
-            http.post((payload) ? payload : '/recent/jobs/get', {}).then(response => {
+            http.post((payload) ? payload : '/recent/recentJobs/get', {}).then(response => {
                 console.log('Get Recent Jobs', response);
-                if(response.data.total > 0) {
-                    context.commit('getRecentJobs', response.data);
+                if(response.data.total >= 0) {
+                    if(response.data.path.match(/get\/archived/) && response.data.total > 0) {
+                        context.commit('getRecentJobs', response.data);
+                        context.commit('showTrashed', 'arrow_back');
+                    } else if(response.data.path.match(/get\/archived/) && response.data.total === 0) {
+                    } else {
+                        context.commit('getRecentJobs', response.data);
+                        context.commit('showTrashed', 'delete');
+                    }
                 }
             }).then(() => {
                 swal.close();
@@ -170,24 +178,14 @@ export const store = new Vuex.Store({
             });
         },
         updateRecentJobs: (context, payload) => {
-            http.post('/recent/jobs/update', {job: payload}).then(response => {
+            http.post('/recent/recentJobs/update', {job: payload}).then(response => {
                 console.log('Update Recent Jobs', response);
             }).catch(error => {
                 console.log(error);
             });
         },
-        getArchivedJobs: (context, payload) => {
-            http.post((payload) ? payload : '/recent/jobs/get/archived', {}).then(response => {
-                console.log('Get Archived Jobs', response);
-                if(response.data.total > 0) {
-                    context.commit('getRecentJobs', response.data);
-                }
-            }).catch(error => {
-                Console.log(error);
-            })
-        },
         archiveRecentJob: (context, payload) => {
-            http.post('/recent/jobs/archive', {id: payload}).then(response => {
+            http.post('/recent/recentJobs/archive', {id: payload}).then(response => {
                 console.log('Archive Recent Job', response);
                 if(response.data) {
                     context.dispatch('getRecentJobs', refreshPage(context));
@@ -197,24 +195,41 @@ export const store = new Vuex.Store({
             });
         },
         restoreArchivedJob: (context, payload) => {
-            http.post('/recent/jobs/restore/archived', {id: payload}).then(response => {
+            http.post('/recent/recentJobs/restore/archived', {id: payload}).then(response => {
                 console.log('Restore Archived Job', response);
                 if(response.data) {
-                    context.dispatch('getArchivedJobs', refreshPage(context));
+                    context.dispatch('getRecentJobs', refreshPage(context));
                 }
             }).catch(error => {
                 console.log(error);
             });
         },
         deleteArchivedJob: (context, payload) => {
-            // ask if its ok to permanently delete job, yes or no. if yes then delete, if no then exit.
-            http.post('/recent/jobs/delete/archived', {id: payload}).then(response => {
-                console.log('Delete Archived Job', response);
-                if(response.data) {
-                    context.dispatch('getArchivedJobs', refreshPage(context));
-                }
-            }).catch(error => {
-                console.log(error);
+            swal({
+                title: 'Delete Recent Job?',
+                text: "You won't be able to revert this!",
+                type: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Yes, delete it!'
+            }).then(function () {
+                http.post('/recent/recentJobs/delete/archived', {id: payload}).then(response => {
+                    console.log('Delete Archived Job', response);
+                    if(response.data) {
+                        swal({
+                            title: 'Deleted Recent Job',
+                            text: 'Record was successfully deleted...',
+                            type: 'success',
+                            useRejections: false,
+                            timer: 2000
+                        }).then(() => {
+                            context.dispatch('getRecentJobs', refreshPage(context));
+                        });
+                    }
+                }).catch(error => {
+                    console.log(error);
+                });
             });
         }
     }

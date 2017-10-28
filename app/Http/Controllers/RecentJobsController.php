@@ -33,7 +33,7 @@ class RecentJobsController extends Controller
 
     public function getArchivedJobs()
     {
-    	return response()->json(RecentJobs::onlyTrashed()->paginate(5));
+    	return response()->json(RecentJobs::onlyTrashed()->paginate(3));
     }
 
     public function restoreArchivedJob(Request $request)

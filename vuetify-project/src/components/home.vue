@@ -1,16 +1,16 @@
 <template>
     <v-container grid-list-md>
-        <template v-if="jobs.total > 0">
-            <v-layout class="justify-space-between">
-                <v-subheader>Displaying {{ jobs.to }} of {{ jobs.total }} jobs.</v-subheader>
-                <div v-if="showTrashed" @click="getTrashed">
-                    <v-icon class="orange--text icon--x-large">delete</v-icon>
-                </div>
-                <div v-else @click="getJobs(null)">
-                    <v-icon class="green--text icon--x-large">arrow_back</v-icon>
-                </div>
-            </v-layout>
+        <v-layout class="justify-space-between">
+            <v-subheader v-if="jobs.data.length > 0">Displaying {{ jobs.from }} to {{ jobs.to }} of {{ jobs.total }} jobs.</v-subheader>
+            <div v-if="showTrashed === 'delete'" @click="getJobs('/recent/recentJobs/get/archived')">
+                <v-icon class="orange--text icon--x-large">{{ showTrashed }}</v-icon>
+            </div>
+            <div v-else @click="getJobs(null)">
+                <v-icon class="green--text icon--x-large">{{ showTrashed }}</v-icon>
+            </div>
+        </v-layout>
 
+        <template v-if="jobs.data.length > 0">
             <v-layout class="mb-3" column>
                 <v-flex v-for="(job, index) in jobs.data" :key="index">
                     <v-card @click="loadJob(job.job_id)" hover>
@@ -36,7 +36,7 @@
                             <div v-if="job.deleted_at" class="d-flex">
                                 <div @click.stop="restoreArchived(job.id)">
                                     <v-btn class="hidden-xs-only btn--flat blue--text">Restore</v-btn>
-                                    <v-icon class="hidden-sm-and-up mr-4 blue--text icon--x-large">restore</v-icon>
+                                    <v-icon class="hidden-sm-and-up mr-5 blue--text icon--x-large">restore</v-icon>
                                 </div>
                                 <div @click.stop="deleteArchived(job.id)">
                                     <v-btn class="hidden-xs-only btn--flat red--text">Delete</v-btn>
@@ -79,6 +79,7 @@
 
             </v-layout>
         </template>
+
         <v-layout v-else>
             <v-flex>
                 <h3>{{ jobCount }}</h3>
@@ -89,26 +90,28 @@
 
 <script>
     export default {
-        data () {
-            return {
-                showTrashed: true
-            }
-        },
         created: function () {
             this.getJobs(null);
         },
         computed: {
             jobs () {
-                return this.$store.getters.jobs;
+                return this.$store.state.recentJobs.jobs;
             },
             jobCount () {
-                return this.jobs.total > 0 ? '' : 'There Were No Recent Jobs Found';
+                return this.jobs.data.length > 0 ? '' : 'There Were No Recent Jobs Found';
+            },
+            showTrashed: {
+                get: function () {
+                    return this.$store.state.recentJobs.showTrashed;
+                },
+                set: function (value) {
+                    this.$store.commit('showTrashed', value);
+                }
             }
         },
         methods: {
             getJobs: function (url) {
                 this.$store.dispatch('getRecentJobs', url);
-                this.showTrashed = true;
             },
             loadJob: function (jobId) {
                 this.$router.push('/account/' + jobId);
@@ -118,10 +121,6 @@
             },
             deleteArchived(id) {
                 this.$store.dispatch('deleteArchivedJob', id);
-            },
-            getTrashed: function () {
-                this.$store.dispatch('getArchivedJobs');
-                this.showTrashed = false;
             },
             restoreArchived: function (id) {
                 this.$store.dispatch('restoreArchivedJob', id);

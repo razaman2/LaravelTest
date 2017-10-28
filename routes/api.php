@@ -30,10 +30,10 @@
 
 	Route::post('/receiver/get', 'ReceiverController@get');
 
-	Route::post('/recent/jobs/get', 'RecentJobsController@index');
-	Route::post('/recent/jobs/update', 'RecentJobsController@store');
-	Route::post('/recent/jobs/archive', 'RecentJobsController@archiveJob');
-	Route::post('/recent/jobs/get/archived', 'RecentJobsController@getArchivedJobs');
-	Route::post('/recent/jobs/restore/archived', 'RecentJobsController@restoreArchivedJob');
-	Route::post('/recent/jobs/delete/archived', 'RecentJobsController@deleteArchivedJob');
+	Route::post('/recent/recentJobs/get', 'RecentJobsController@index');
+	Route::post('/recent/recentJobs/update', 'RecentJobsController@store');
+	Route::post('/recent/recentJobs/archive', 'RecentJobsController@archiveJob');
+	Route::post('/recent/recentJobs/get/archived', 'RecentJobsController@getArchivedJobs');
+	Route::post('/recent/recentJobs/restore/archived', 'RecentJobsController@restoreArchivedJob');
+	Route::post('/recent/recentJobs/delete/archived', 'RecentJobsController@deleteArchivedJob');
 
