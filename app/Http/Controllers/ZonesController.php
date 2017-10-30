@@ -2,48 +2,48 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Zone;
+use App\Rules\UniqueZone;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 
 class ZonesController extends Controller
 {
-	protected $zones;
-
-	public function __construct()
-	{
-		$this->zones = new \App\Models\Zones();
-	}
-
 	public function index()
 	{
-		return response()->json($this->zones::all());
+		return response()->json(Zone::all());
 	}
 
-    public function store(Request $request)
+    public function save(Request $request)
     {
-    	$status = false;
+    	$request->validate([
+		    'zone_number' => [new UniqueZone($request->jobId, $request->companyId)]
+	    ]);
 
-    	$this->zones->tested = ($request->tested) ? true : false;
-    	$this->zones->existing = ($request->existing) ? true : false;
-    	$this->zones->zone_id = $request->zone_id;
-    	$this->zones->zone_name = $request->zone_name;
-    	$this->zones->event_type = $request->event_type;
-    	$this->zones->device_type = $request->device_type;
+	    $zone = Zone::updateOrCreate(
+		    ['id' => $request->zone['id'] ?? 0],
+		    [
+			    'company_id' => $request->companyId,
+			    'job_id' => $request->jobId,
+			    'existing' => $request->zone['existing'],
+			    'tested' => $request->zone['tested'],
+			    'zone_number' => $request->zone['zone_number'],
+			    'zone_name' => $request->zone['zone_name'],
+			    'event_type' => $request->zone['event_type'],
+			    'device_type' => $request->zone['device_type']
+		    ]
+	    );
 
-	    if($this->zones->save())
-	    {
-		    $status = $this->zones;
-	    }
-
-	    return response()->json($status);
+	    return response()->json($zone);
     }
 
-    public function destroy($id)
+    public function archive(Request $request)
     {
-	    return response()->json($this->zones::destroy($id));
+	    return response()->json(Zone::where('id', $request->zone['id'])->delete());
     }
 
     public function show(Request $request)
     {
-    	return view('zones.show')->with("zone", $this->zones->find($request->zone_id));
+    	return response()->json(Zone::where('id', $request->id));
     }
 }

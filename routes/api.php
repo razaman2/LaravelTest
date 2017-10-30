@@ -19,7 +19,6 @@
 	})->middleware('auth:api');
 
 	Route::group(['middleware' => 'auth:api'], function () {
-		Route::resource('/zones', 'ZonesController');
 		Route::get('/sms/send/{recipient}/{body}', 'SMSController@send');
 	});
 
@@ -36,4 +35,8 @@
 	Route::post('/recent/recentJobs/get/archived', 'RecentJobsController@getArchivedJobs');
 	Route::post('/recent/recentJobs/restore/archived', 'RecentJobsController@restoreArchivedJob');
 	Route::post('/recent/recentJobs/delete/archived', 'RecentJobsController@deleteArchivedJob');
+
+	Route::post('/zone/create', 'ZonesController@save');
+	Route::post('/zones/get', 'ZonesController@index');
+	Route::post('/zone/archive', 'ZonesController@archive');
 
