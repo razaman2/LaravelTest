@@ -15,6 +15,7 @@ export default {
             state.zones = payload;
         },
         editZone (state, payload) {
+            swal('', '', '');
             payload.zone.edit = true;
             state.zones.splice(payload.index, 1, payload.zone);
         },
@@ -30,7 +31,7 @@ export default {
     },
     actions: {
         getZones (context) {
-            window.$http.post('/zones/get', {}).then(response => {
+            http.post('/zones/get/all', {}).then(response => {
                 console.log('Get Zones', response);
                 if(response.data.length > 0) {
                     context.commit('setZones', response.data);
@@ -40,7 +41,7 @@ export default {
             });
         },
         saveZone (context, payload) {
-            window.$http.post('/zone/create', {zone: payload.zone}).then(response => {
+            http.post('/zone/create', {zone: payload.zone}).then(response => {
                 console.log('Add Zone', response);
                 context.commit('saveZone', {index: payload.index,  zone: response.data});
             }).catch(error => {
@@ -48,7 +49,7 @@ export default {
             });
         },
         deleteZone (context, payload) {
-            window.$http.post('/zone/archive', {zone: payload.zone}).then(response => {
+            http.post('/zone/archive', {zone: payload.zone}).then(response => {
                 console.log('Delete Zone', response);
                 if(response.data) {
                     context.commit('deleteZone', {index: payload.index});

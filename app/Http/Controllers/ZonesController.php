@@ -5,7 +5,6 @@ namespace App\Http\Controllers;
 use App\Models\Zone;
 use App\Rules\UniqueZone;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Log;
 
 class ZonesController extends Controller
 {
@@ -44,6 +43,7 @@ class ZonesController extends Controller
 
     public function show(Request $request)
     {
-    	return response()->json(Zone::where('id', $request->id));
+    	\Illuminate\Support\Facades\Log::info($request->all());
+    	return response()->json(Zone::where('id', $request->id)->first());
     }
 }

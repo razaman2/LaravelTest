@@ -37,6 +37,7 @@
 	Route::post('/recent/recentJobs/delete/archived', 'RecentJobsController@deleteArchivedJob');
 
 	Route::post('/zone/create', 'ZonesController@save');
-	Route::post('/zones/get', 'ZonesController@index');
+	Route::post('/zones/get/all', 'ZonesController@index');
+	Route::post('/zones/get', 'ZonesController@show');
 	Route::post('/zone/archive', 'ZonesController@archive');
 

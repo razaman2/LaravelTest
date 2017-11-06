@@ -7,12 +7,7 @@ import global from './global';
 Vue.use(Vuex);
 
 export const store = new Vuex.Store({
-    // strict: true,
     modules: {
         ui, zone, global
-    },
-    mutations: {
-    },
-    actions: {
     }
 });
