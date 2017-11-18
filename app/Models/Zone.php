@@ -10,7 +10,7 @@ class Zone extends Model
 {
     use SoftDeletes;
 
-    protected $guarded = [];
+    protected $guarded = ['id'];
 
 	public function getCreatedAtAttribute($value)
 	{
@@ -21,4 +21,9 @@ class Zone extends Model
 	{
 		return (new Carbon($value))->diffForHumans();
 	}
+
+	protected $casts = [
+		'tested'=>'boolean',
+		'existing'=>'boolean'
+	];
 }

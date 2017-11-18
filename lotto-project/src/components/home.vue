@@ -17,7 +17,7 @@
                             <small v-if="zone.created_at">Created: {{ zone.created_at }}</small>
                         </v-content>
                         <v-layout>
-                            <v-checkbox class="existing" v-model="zone.existing"></v-checkbox>
+                            <v-checkbox ref="chkbx" class="red align" v-model="zone.existing"></v-checkbox>
                             <v-text-field label="Zone Number" mask="##" v-model="zone.zone_number"></v-text-field>
                             <v-text-field label="Zone Name" v-model="zone.zone_name"></v-text-field>
                             <v-icon :class="zone.tested ? 'green--text' : 'red--text'">check_circle</v-icon>
@@ -53,6 +53,9 @@
     export default {
         created () {
             this.getZones();
+        },
+        mounted () {
+            console.log(this);
         },
         computed: {
             zones () {
@@ -92,12 +95,3 @@
         }
     }
 </script>
-
-<style>
-    .existing{
-        background-color: blue;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-    }
-</style>

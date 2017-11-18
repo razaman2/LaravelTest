@@ -15,7 +15,7 @@ import router from './router';
 
 Window.prototype.swal = swal;
 Window.prototype.moment = moment;
-Window.prototype.http = axios.create({baseURL: 'http://192.168.81.102:8000/api'});
+Window.prototype.http = axios.create({baseURL: 'http://192.168.123.107:8000/api'});
 
 Vue.use(Vuetify);
 

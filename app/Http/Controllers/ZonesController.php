@@ -43,7 +43,6 @@ class ZonesController extends Controller
 
     public function show(Request $request)
     {
-    	\Illuminate\Support\Facades\Log::info($request->all());
     	return response()->json(Zone::where('id', $request->id)->first());
     }
 }

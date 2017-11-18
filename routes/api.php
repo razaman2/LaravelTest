@@ -38,6 +38,11 @@
 
 	Route::post('/zone/create', 'ZonesController@save');
 	Route::post('/zones/get/all', 'ZonesController@index');
-	Route::post('/zones/get', 'ZonesController@show');
+	Route::post('/zone/get', 'ZonesController@show');
 	Route::post('/zone/archive', 'ZonesController@archive');
+
+	Route::post('/contact/create', 'ContactController@save');
+	Route::post('/contacts/get/all', 'ContactController@index');
+	Route::post('/contact/archive', 'ContactController@archive');
+	Route::post('/contacts/get/selects', 'ContactController@contactSelects');
 
