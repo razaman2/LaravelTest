@@ -2,8 +2,8 @@
 
 	namespace App\Helpers;
 
-	use Illuminate\Filesystem\Filesystem;
 	use Illuminate\Support\Facades\Storage;
+	use PHPExcel_IOFactory;
 	use WsdlToPhp\PackageGenerator\ConfigurationReader\GeneratorOptions;
 	use WsdlToPhp\PackageGenerator\Generator\Generator;
 
@@ -25,6 +25,13 @@
 			$generator = new Generator($options);
 			// Package generation
 			$generator->generatePackage();
+			// Update composer.json file
+			$file = json_decode(Storage::disk('root')->get('composer.json'), true);
+			if(!isset($file['autoload']['psr-4']['Wsdl\\']))
+			{
+				$file['autoload']['psr-4']['Wsdl\\'] = $directory;
+				Storage::disk('root')->put('composer.json', json_encode($file));
+			}
 			// Rename tutorial file
 			Storage::disk('generated')->move('tutorial.php', $this->dirName."Tutorial.php");
 		}
@@ -58,4 +65,23 @@
 	{
 		protected $dirName = 'MoniBounce';
 		protected $wsdlUrl = 'https://ws.monitronics.net/BounceServiceR2/wwwBouncer.svc?wsdl';
+	}
+
+	class GenerateRapidWeb extends WsdlGenerator
+	{
+		protected $dirName = 'RapidWeb';
+		protected $wsdlUrl = 'https://rapidweb3000.com/StagesGatewayExternalDev145/Gateway.asmx?wsdl';
+
+		public function test()
+		{
+			$filePath = base_path().'\\ipcameras.xlsx';
+			$reader = PHPExcel_IOFactory::createReaderForFile($filePath);
+			$file = $reader->load($filePath);
+			$worksheet = $file->getActiveSheet();
+			$lastRow = $worksheet->getRowIterator()->current()->getCellIterator();
+			print_r($file);
+//			foreach($file as $key => $value)
+//			{
+//			}
+		}
 	}

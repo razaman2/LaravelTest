@@ -16,7 +16,7 @@ class ZonesController extends Controller
     public function save(Request $request)
     {
     	$request->validate([
-		    'zone_number' => [new UniqueZone($request->jobId, $request->companyId)]
+		    'zone.zone_number' => [new UniqueZone($request->jobId, $request->companyId)]
 	    ]);
 
 	    $zone = Zone::updateOrCreate(

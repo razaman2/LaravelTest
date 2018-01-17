@@ -1,0 +1,2 @@
+Warning
+When using SSL, Microsoft IIS will violate the protocol by closing the connection without sending a close_notify indicator. PHP will report this as "SSL: Fatal Protocol Error" when you reach the end of the data. To work around this, the value of error_reporting should be lowered to a level that does not include warnings. PHP can detect buggy IIS server software when you open the stream using the https:// wrapper and will suppress the warning. When using fsockopen() to create an ssl:// socket, the developer is responsible for detecting and suppressing this warning.

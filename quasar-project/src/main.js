@@ -39,8 +39,8 @@ import filters from './filters/filters';
 Window.prototype.swal = swal;
 Window.prototype.moment = moment;
 Window.prototype.http = axios.create({
-	baseURL: 'http://192.168.1.102:8000/api'
-	// baseURL: 'http://192.168.123.107:8000/api'
+	// baseURL: 'http://192.168.1.102:8000/api'
+	baseURL: 'http://192.168.123.107:8000/api'
 });
 
 http.interceptors.response.use(response => {

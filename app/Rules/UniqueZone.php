@@ -21,7 +21,7 @@ class UniqueZone implements Rule
 	    return Zone::whereExists(function($query) use ($value) {
 		    $query->where('job_id', $this->jobId)
 			    ->where('company_id', $this->companyId)
-			    ->where('zone_number', value($value));
+			    ->where('zone_number', $value);
 	    })->get()->count() ? false : true;
     }
 

@@ -59,6 +59,7 @@
 	      return{
 			      zone: {
 				      existing: false,
+                      tested: false,
 				      zone_number: null,
 				      zone_name: null,
 				      event_type: null,
@@ -104,7 +105,7 @@
 			},
 			resetZone () {
 				for(let key in this.zone) {
-					if(key === 'existing') {
+					if(key === 'existing' || key === 'tested') {
 						this.zone[key] = false;
 					} else {
 						this.zone[key] = null;

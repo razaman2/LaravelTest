@@ -13,6 +13,8 @@
 
 	use Illuminate\Support\Facades\Route;
 
+	Route::post('/zones/test', 'ZonesController@save');
+
 	Route::get('/', 'PagesController@index');
 	Route::get('/about', 'PagesController@about');
 	Route::get('/services', 'PagesController@services');
